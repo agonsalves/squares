@@ -23,14 +23,17 @@ const SquareContainer = styled(animated.div)`
   overflow: hidden;
   display: flex;
   justify-content: flex-end;
+  position: relative;
 `
 
 const Worm = styled(animated.div)`
   border-radius: ${({size}) => size}px;
-  height: 100%;
-  width: 300%;
-  flex-shrink: 0;
-  margin-right: ${({size}) => size}px;
+  height: ${({size}) => size * 3}px;
+  width: ${({size}) => size}px;
+  margin-bottom: ${({size}) => size}px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 `
 
 const colors = [
@@ -78,10 +81,9 @@ const Square = ({size, duration}) => {
         setWormColor(randomColors[1])
     }, [])
 
-    const {x, rotate} = useSpring({
+    const {y} = useSpring({
         from: {
-            x: 0,
-            rotate: 90,
+            y: 0,
             immediate: true
         },
         config: {
@@ -92,20 +94,20 @@ const Square = ({size, duration}) => {
         loop: true,
         to: useCallback(async animate => {
             await animate({
-                to: {x: size},
+                y: size,
                 delay: getRandomDelay(10)
             })
             await animate({
-                x: size * 2,
+                y: size * 2,
                 delay: getRandomDelay()
             })
             setBackgroundColor(color => randomColors[(randomColors.indexOf(color) + 2) % randomColors.length])
             await animate({
-                x: size * 3,
+                y: size * 3,
                 delay: getRandomDelay()
             })
             await animate({
-                x: size * 4,
+                y: size * 4,
                 delay: getRandomDelay()
             })
             setWormColor(color => randomColors[(randomColors.indexOf(color) + 2) % randomColors.length])
@@ -113,8 +115,8 @@ const Square = ({size, duration}) => {
     })
 
     return (
-        <SquareContainer style={{backgroundColor, rotate}} size={size}>
-            <Worm style={{backgroundColor: wormColor, x}} size={size}/>
+        <SquareContainer style={{backgroundColor}} size={size}>
+            <Worm style={{backgroundColor: wormColor, y}} size={size}/>
         </SquareContainer>
     )
 }
